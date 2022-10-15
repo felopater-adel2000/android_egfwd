@@ -38,8 +38,11 @@ class MainActivity : AppCompatActivity()
         val navController = findNavController(R.id.navHostFragment)
         drawerLayout = binding.drawerLayout
 
+        //add navController to actionBar to handel Up button and drawerLayout
+        //NavigationUI.setupActionBarWithNavController(this, navController)
         NavigationUI.setupActionBarWithNavController(this, navController, drawerLayout)
 
+        //add navController to NavigationView  
         NavigationUI.setupWithNavController(binding.navView, navController)
 
         // prevent nav gesture if not on start destination
@@ -53,6 +56,7 @@ class MainActivity : AppCompatActivity()
 
     }
 
+    // this function tell what will happen when click up button 
     override fun onSupportNavigateUp(): Boolean {
         val navController = this.findNavController(R.id.navHostFragment)
         return NavigationUI.navigateUp( navController, drawerLayout)
