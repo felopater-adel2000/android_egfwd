@@ -22,46 +22,66 @@ package com.example.android.marsrealestate.overview
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.android.marsrealestate.network.MarsApi
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.example.android.marsrealestate.network.MarsProperty
+import kotlinx.coroutines.launch
 
 /**
  * The [ViewModel] that is attached to the [OverviewFragment].
  */
 class OverviewViewModel : ViewModel() {
 
-    // The internal MutableLiveData String that stores the status of the most recent request
-    private val _response = MutableLiveData<String>()
+    // The internal MutableLiveData String that stores the _status of the most recent request
+    private val _status = MutableLiveData<String>()
 
-    // The external immutable LiveData for the request status String
-    val response: LiveData<String>
-        get() = _response
+    // The external immutable LiveData for the request _status String
+    val status: LiveData<String>
+        get() = _status
+
+    private val _propertyList = MutableLiveData<List<MarsProperty>>()
+    val property: LiveData<List<MarsProperty>>
+        get() = _propertyList
 
     /**
-     * Call getMarsRealEstateProperties() on init so we can display status immediately.
+     * Call getMarsRealEstateProperties() on init so we can display _status immediately.
      */
     init {
         getMarsRealEstateProperties()
     }
 
     /**
-     * Sets the value of the status LiveData to the Mars API status.
+     * Sets the value of the _status LiveData to the Mars API _status.
      */
-    private fun getMarsRealEstateProperties() {
-        MarsApi.retrofitServices.getProperties().enqueue(object: Callback<String> {
-            override fun onResponse(call: Call<String>, response: Response<String>)
+    private fun getMarsRealEstateProperties()
+    {
+        viewModelScope.launch {
+            try {
+                var listResult = MarsApi.retrofitServices.getProperties()
+                if(listResult.size > 0)
+                {
+                    _propertyList.value = listResult
+                }
+                //_status.value = "Success: ${listResult.size} Mars Property"
+            }catch(e: java.lang.Exception)
             {
-                _response.value = response.body()
-
+                _status.value = "Fail: ${e.message}"
             }
+        }
 
-            override fun onFailure(call: Call<String>, t: Throwable)
-            {
-                _response.value = "Fail: ${t.message}"
-            }
-        })
+        // this code is deprecated because we will use coroutines with retrofit
+//        MarsApi.retrofitServices.getProperties().enqueue(object: Callback<List<MarsProperty>> {
+//            override fun onResponse(call: Call<List<MarsProperty>>, response: Response<List<MarsProperty>>)
+//            {
+//                _status.value = "Success: ${response.body()?.size.toString()} Mars Property"
+//
+//            }
+//
+//            override fun onFailure(call: Call<List<MarsProperty>>, t: Throwable)
+//            {
+//                _status.value = "Fail: ${t.message}"
+//            }
+//        })
 
     }
 }
