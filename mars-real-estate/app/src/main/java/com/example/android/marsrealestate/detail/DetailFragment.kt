@@ -17,11 +17,13 @@
 package com.example.android.marsrealestate.detail
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.navArgs
 import com.example.android.marsrealestate.databinding.FragmentDetailBinding
 
 /**
@@ -29,11 +31,24 @@ import com.example.android.marsrealestate.databinding.FragmentDetailBinding
  */
 class DetailFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+                              savedInstanceState: Bundle?): View?
+    {
 
         @Suppress("UNUSED_VARIABLE")
         val application = requireNotNull(activity).application
         val binding = FragmentDetailBinding.inflate(inflater)
+
+        val marsProperty = DetailFragmentArgs.fromBundle(arguments!!).selectedProperty
+        //val marsProperty by navArgs<DetailFragmentArgs>()
+
+        //Log.i("Felo", "${marsProperty.imgSrcUrl}")
+        //Log.i("Felo", "${marsProperty.type}")
+
+        val viewModelFactory = DetailViewModelFactory(marsProperty, application)
+        val viewModel = ViewModelProvider(this, viewModelFactory)[DetailViewModel::class.java]
+
+        binding.viewModel = viewModel
+
         binding.lifecycleOwner = this
         return binding.root
     }

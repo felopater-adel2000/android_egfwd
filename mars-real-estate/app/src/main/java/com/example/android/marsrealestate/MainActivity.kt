@@ -19,6 +19,10 @@ package com.example.android.marsrealestate
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.NavigationUI
+import androidx.navigation.ui.setupActionBarWithNavController
 
 class MainActivity : AppCompatActivity() {
 
@@ -29,5 +33,12 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        //setupActionBarWithNavController(findNavController(R.id.nav_host_fragment), AppBarConfiguration(findNavController(R.id.nav_host_fragment).graph))
+        NavigationUI.setupActionBarWithNavController(this, findNavController(R.id.nav_host_fragment), AppBarConfiguration(findNavController(R.id.nav_host_fragment).graph))
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        return findNavController(R.id.nav_host_fragment).navigateUp()
     }
 }

@@ -24,48 +24,57 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.android.marsrealestate.network.MarsApi
+import com.example.android.marsrealestate.network.MarsApiFilter
 import com.example.android.marsrealestate.network.MarsProperty
 import kotlinx.coroutines.launch
+enum class MarsApiStatus {LOADING, ERROR, DONE}
 
 /**
  * The [ViewModel] that is attached to the [OverviewFragment].
  */
-class OverviewViewModel : ViewModel() {
+class OverviewViewModel : ViewModel()
+{
 
     // The internal MutableLiveData String that stores the _status of the most recent request
-    private val _status = MutableLiveData<String>()
-
+    private val _status = MutableLiveData<MarsApiStatus>()
     // The external immutable LiveData for the request _status String
-    val status: LiveData<String>
+    val status: LiveData<MarsApiStatus>
         get() = _status
 
     private val _propertyList = MutableLiveData<List<MarsProperty>>()
     val property: LiveData<List<MarsProperty>>
         get() = _propertyList
 
+    private val _navigateToSelectedProperty = MutableLiveData<MarsProperty>()
+    val navigateToSelectedProperty: LiveData<MarsProperty>
+        get() = _navigateToSelectedProperty
+
     /**
      * Call getMarsRealEstateProperties() on init so we can display _status immediately.
      */
     init {
-        getMarsRealEstateProperties()
+        getMarsRealEstateProperties(MarsApiFilter.SHOW_ALL)
     }
 
     /**
      * Sets the value of the _status LiveData to the Mars API _status.
      */
-    private fun getMarsRealEstateProperties()
+    private fun getMarsRealEstateProperties(filter: MarsApiFilter)
     {
         viewModelScope.launch {
             try {
-                var listResult = MarsApi.retrofitServices.getProperties()
-                if(listResult.size > 0)
+                _status.value = MarsApiStatus.LOADING
+                var listResult = MarsApi.retrofitServices.getProperties(filter.value)
+                _status.value = MarsApiStatus.DONE
+                if(listResult.isNotEmpty())
                 {
                     _propertyList.value = listResult
                 }
                 //_status.value = "Success: ${listResult.size} Mars Property"
             }catch(e: java.lang.Exception)
             {
-                _status.value = "Fail: ${e.message}"
+                _status.value = MarsApiStatus.ERROR
+                _propertyList.value = ArrayList()
             }
         }
 
@@ -83,5 +92,20 @@ class OverviewViewModel : ViewModel() {
 //            }
 //        })
 
+    }
+
+    fun displayPropertyDetails(marsProperty: MarsProperty)
+    {
+        _navigateToSelectedProperty.value = marsProperty
+    }
+
+    fun displayPropertyDetailsCompleted()
+    {
+        _navigateToSelectedProperty.value = null
+    }
+
+    fun updateFilter(filter: MarsApiFilter)
+    {
+        getMarsRealEstateProperties(filter)
     }
 }
