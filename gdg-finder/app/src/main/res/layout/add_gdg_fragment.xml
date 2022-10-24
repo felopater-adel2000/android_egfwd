@@ -42,7 +42,8 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintBottom_toTopOf="@+id/EditTextName"
-                    android:scaleType="centerCrop"/>
+                    android:scaleType="centerCrop"
+                    android:contentDescription="@string/stage_image_description"/>
 
             <EditText
                     android:id="@+id/EditTextName"
@@ -56,7 +57,8 @@
                     android:layout_marginEnd="32dp"
                     android:layout_marginBottom="4dp"
                     app:layout_constraintBottom_toTopOf="@+id/EditTextEmail"
-                    android:singleLine="true"/>
+                    android:singleLine="true"
+                    android:hint="@string/your_name_label"/>
 
             <EditText
                     android:id="@+id/EditTextEmail"
@@ -70,7 +72,8 @@
                     android:layout_marginEnd="32dp"
                     android:layout_marginBottom="4dp"
                     app:layout_constraintBottom_toTopOf="@+id/EditTextCity"
-                    android:singleLine="true"/>
+                    android:singleLine="true"
+                    android:hint="@string/email_label"/>
             <EditText
                     android:id="@+id/EditTextCity"
                     android:layout_height="wrap_content"
@@ -83,7 +86,8 @@
                     android:layout_marginEnd="32dp"
                     app:layout_constraintBottom_toTopOf="@+id/EditTextCountry"
                     android:layout_marginBottom="4dp"
-                    android:singleLine="true"/>
+                    android:singleLine="true"
+                    android:hint="@string/city_label"/>
             <EditText
                     android:id="@+id/EditTextCountry"
                     android:layout_height="wrap_content"
@@ -96,7 +100,8 @@
                     android:layout_marginBottom="4dp"
                     app:layout_constraintBottom_toTopOf="@+id/EditTextRegion"
                     android:layout_marginTop="4dp"
-                    android:singleLine="true"/>
+                    android:singleLine="true"
+                    android:hint="@string/country_label"/>
             <EditText
                     android:id="@+id/EditTextRegion"
                     android:layout_height="wrap_content"
@@ -109,7 +114,8 @@
                     android:layout_marginEnd="32dp"
                     android:layout_marginBottom="4dp"
                     app:layout_constraintBottom_toTopOf="@+id/EditTextWhy"
-                    android:singleLine="true"/>
+                    android:singleLine="true"
+                    android:hint="@string/region_label"/>
 
             <!--wrap in a layout to group-->
             <!--<LinearLayout -->
@@ -135,7 +141,8 @@
                     app:layout_constraintTop_toBottomOf="@+id/EditTextRegion"
                     android:layout_marginBottom="1dp"
                     app:layout_constraintBottom_toTopOf="@+id/EditTextWhy"
-                    app:layout_constraintStart_toStartOf="parent"/>
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:contentDescription="@string/motivation"/>
 
             <EditText
                     android:id="@+id/EditTextWhy"
@@ -150,7 +157,8 @@
                     android:layout_marginTop="32dp"
                     android:layout_marginEnd="32dp"
                     android:layout_marginStart="32dp"
-                    android:layout_marginBottom="8dp"/>
+                    android:layout_marginBottom="8dp"
+                    android:hint="@string/enter_motivation"/>
 
             <!--</LinearLayout>-->
 
@@ -167,7 +175,8 @@
                     android:textSize="12sp"
                     android:layout_marginBottom="12dp"
                     android:layout_marginEnd="40dp"
-                    android:onClick="@{() -> viewModel.onSubmitApplication()}"/>
+                    android:onClick="@{() -> viewModel.onSubmitApplication()}"
+                    android:contentDescription="@string/submit_button_description"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 </layout>
