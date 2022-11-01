@@ -16,6 +16,8 @@
 
 package com.example.android.eggtimernotifications
 
+import android.app.NotificationManager
+import android.os.Build
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.android.eggtimernotifications.ui.EggTimerFragment
@@ -31,5 +33,7 @@ class MainActivity : AppCompatActivity() {
                 .replace(R.id.container, EggTimerFragment.newInstance())
                 .commitNow()
         }
+
+
     }
 }

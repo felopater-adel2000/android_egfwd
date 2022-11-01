@@ -21,6 +21,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.CountDownTimer
 import android.os.SystemClock
+import android.util.Log
 import androidx.core.app.AlarmManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.*
@@ -101,14 +102,17 @@ class EggTimerViewModel(private val app: Application) : AndroidViewModel(app) {
      *
      * @param timerLengthSelection, interval timerLengthSelection value.
      */
-    fun setTimeSelected(timerLengthSelection: Int) {
+    fun setTimeSelected(timerLengthSelection: Int)
+    {
+        Log.i("Felo", timerLengthSelection.toString())
         _timeSelection.value = timerLengthSelection
     }
 
     /**
      * Creates a new alarm, notification and timer
      */
-    private fun startTimer(timerLengthSelection: Int) {
+    private fun startTimer(timerLengthSelection: Int)
+    {
         _alarmOn.value?.let {
             if (!it) {
                 _alarmOn.value = true
@@ -119,6 +123,9 @@ class EggTimerViewModel(private val app: Application) : AndroidViewModel(app) {
                 val triggerTime = SystemClock.elapsedRealtime() + selectedInterval
 
                 // TODO: Step 1.5 get an instance of NotificationManager and call sendNotification
+                val notificationManager = ContextCompat.getSystemService(app, NotificationManager::class.java)  as NotificationManager
+                notificationManager.sendNotification(app.getString(R.string.timer_running), app)
+
 
                 // TODO: Step 1.15 call cancel notification
 
