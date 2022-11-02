@@ -61,7 +61,7 @@ class EggTimerFragment : Fragment() {
         //NotificationChannel must be from version 26(Oreo) or above
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
         {
-            val notificationChannel = NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_LOW)
+            val notificationChannel = NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_HIGH)
             notificationChannel.enableLights(true)
             notificationChannel.lightColor = Color.RED
             notificationChannel.enableVibration(true)

@@ -38,11 +38,25 @@ private val FLAGS = 0
  *
  * @param context, activity context.
  */
-fun NotificationManager.sendNotification(messageBody: String, applicationContext: Context) {
+fun NotificationManager.sendNotification(messageBody: String, applicationContext: Context)
+{
+    //Intent Creations
+    //when user click the notification, the MainActivity will run
+    val contentIntent = Intent(applicationContext, MainActivity::class.java)
+
+    //create PendingIntent
+    val contentPendingIntent = PendingIntent.getActivity(applicationContext, NOTIFICATION_ID, contentIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+
+
+    //Notification Creations
     val builder = NotificationCompat.Builder(applicationContext, applicationContext.getString(R.string.egg_notification_channel_id))
         .setSmallIcon(R.drawable.cooked_egg)
         .setContentTitle(applicationContext.getString(R.string.notification_title))
         .setContentText(messageBody)
+    //you need to set ContentIntent to NotificationBuilder
+        .setContentIntent(contentPendingIntent)
+    //when user click to notification, the notification will cansel
+        .setAutoCancel(true)
 
     notify(NOTIFICATION_ID, builder.build())
 
