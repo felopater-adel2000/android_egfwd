@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1029377899554",
+    "project_id": "notification-egfwd",
+    "storage_bucket": "notification-egfwd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1029377899554:android:58d59895c9dd844b97de7b",
+        "android_client_info": {
+          "package_name": "com.example.android.eggtimernotifications"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1029377899554-0l39tqt1ea4ef4n11p2grlgv103jl84i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCNK5Kt0yffBZ-AcRd8Y4iYTo9rgYipjhQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1029377899554-0l39tqt1ea4ef4n11p2grlgv103jl84i.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

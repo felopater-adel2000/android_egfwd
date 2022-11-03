@@ -27,6 +27,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.*
 import com.example.android.eggtimernotifications.receiver.AlarmReceiver
 import com.example.android.eggtimernotifications.R
+import com.example.android.eggtimernotifications.util.cancelNotification
 import com.example.android.eggtimernotifications.util.sendNotification
 import kotlinx.coroutines.*
 
@@ -128,6 +129,7 @@ class EggTimerViewModel(private val app: Application) : AndroidViewModel(app) {
 
 
                 // TODO: Step 1.15 call cancel notification
+                (ContextCompat.getSystemService(app, NotificationManager::class.java) as NotificationManager).cancelNotification()
 
                 AlarmManagerCompat.setExactAndAllowWhileIdle(
                     alarmManager,

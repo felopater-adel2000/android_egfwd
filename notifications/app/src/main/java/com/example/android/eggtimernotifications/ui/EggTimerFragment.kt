@@ -67,6 +67,9 @@ class EggTimerFragment : Fragment() {
             notificationChannel.enableVibration(true)
             notificationChannel.description = "Time for breakfast"
 
+            //if you need to disappear dot App Icon on notification
+            notificationChannel.setShowBadge(false)
+
             val notificationManager = requireActivity().getSystemService(NotificationManager::class.java)
             notificationManager.createNotificationChannel(notificationChannel)
         }

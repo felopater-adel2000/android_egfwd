@@ -47,6 +47,13 @@ fun NotificationManager.sendNotification(messageBody: String, applicationContext
     //create PendingIntent
     val contentPendingIntent = PendingIntent.getActivity(applicationContext, NOTIFICATION_ID, contentIntent, PendingIntent.FLAG_UPDATE_CURRENT)
 
+    val eggImage = BitmapFactory.decodeResource(applicationContext.resources, R.drawable.cooked_egg)
+
+    val bigPictureStyle = NotificationCompat.BigPictureStyle().bigPicture(eggImage).bigPicture(eggImage).bigPicture(null)
+
+    val snoozeIntent = Intent(applicationContext, SnoozeReceiver::class.java)
+    val snoozePendingIntent: PendingIntent = PendingIntent.getBroadcast(applicationContext, REQUEST_CODE, snoozeIntent, FLAGS)
+
 
     //Notification Creations
     val builder = NotificationCompat.Builder(applicationContext, applicationContext.getString(R.string.egg_notification_channel_id))
@@ -57,6 +64,17 @@ fun NotificationManager.sendNotification(messageBody: String, applicationContext
         .setContentIntent(contentPendingIntent)
     //when user click to notification, the notification will cansel
         .setAutoCancel(true)
+    //if i send notification with alert sound but one time
+        .setOnlyAlertOnce(true)
+    //set style to notification
+        .setStyle(bigPictureStyle)
+    //set big Picture on the side in Collapsed Notification
+        .setLargeIcon(eggImage)
+    //create action function when click on Snooze button
+        .addAction(R.drawable.egg_icon, applicationContext.getString(R.string.snooze), snoozePendingIntent)
+    //set priority for notification
+        .setPriority(NotificationCompat.PRIORITY_HIGH)
+
 
     notify(NOTIFICATION_ID, builder.build())
 
@@ -65,3 +83,8 @@ fun NotificationManager.sendNotification(messageBody: String, applicationContext
 }
 
 // TODO: Step 1.14 Cancel all notifications
+
+fun NotificationManager.cancelNotification()
+{
+    cancelAll()
+}
