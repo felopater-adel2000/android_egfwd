@@ -1,8 +1,39 @@
 package com.example.minipaint
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.view.View
+import androidx.core.content.res.ResourcesCompat
 
 class MyCanvasView(context: Context) : View(context)
 {
+    private lateinit var extraCanvas: Canvas
+    private lateinit var extraBitmap: Bitmap
+
+    private val backgroundColor = ResourcesCompat.getColor(resources, R.color.colorBackground, null)
+
+    override fun onSizeChanged(width: Int, height: Int, oldWidth: Int, oldHeight: Int)
+    {
+        super.onSizeChanged(width, height, oldWidth, oldHeight)
+
+        //to avoid mutlie creating of Bitmap do this condition
+        if (::extraBitmap.isInitialized) extraBitmap.recycle()
+
+
+        //define Bitmap with width and height of View
+        //Bitmap.Config -> method to store colors
+        //ARGB_8888 -> store each color in 4 bytes and is recommended
+        extraBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+
+        extraCanvas = Canvas(extraBitmap)
+        extraCanvas.drawColor(backgroundColor)
+    }
+
+//    override fun onDraw(canvas: Canvas?) {
+//        super.onDraw(canvas)
+//
+//        canvas?.drawBitmap(extraBitmap, 0f, 0f, null)
+//    }
+
 }
