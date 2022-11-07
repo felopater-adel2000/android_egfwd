@@ -3,6 +3,7 @@ package com.example.minipaint
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Path
 import android.view.MotionEvent
@@ -37,6 +38,9 @@ class MyCanvasView(context: Context) : View(context)
 
     private var motionTouchEventX = 0f
     private var motionTouchEventY = 0f
+
+    private var currentX = 0f
+    private var currentY = 0f
 
     override fun onSizeChanged(width: Int, height: Int, oldWidth: Int, oldHeight: Int)
     {
@@ -76,8 +80,12 @@ class MyCanvasView(context: Context) : View(context)
         return true
     }
 
-    private fun touchUp() {
-
+    private fun touchUp()
+    {
+        path.reset()
+        path.moveTo(motionTouchEventX, motionTouchEventY)
+        currentX = motionTouchEventX
+        currentY = motionTouchEventY
     }
 
     private fun touchStart() {
@@ -85,7 +93,7 @@ class MyCanvasView(context: Context) : View(context)
     }
 
     private fun touchMove() {
-        
+
     }
 
 }
