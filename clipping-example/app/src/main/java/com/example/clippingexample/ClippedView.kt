@@ -58,42 +58,56 @@ class ClippedView @JvmOverloads constructor(context: Context, attrs: AttributeSe
     private fun drawClippedRectangle(canvas: Canvas)
     {
         canvas.clipRect(clipRectLeft, clipRectTop, clipRectRight, clipRectBottom)
+
         canvas.drawColor(Color.WHITE)
 
         paint.color = Color.RED
         canvas.drawLine(clipRectLeft, clipRectTop, clipRectRight, clipRectBottom, paint)
 
         paint.color = Color.GREEN
-        canvas.drawCircle(circleRadius, clipRectBottom - circleRadius, circleRadius, paint)
+        canvas.drawCircle(circleRadius,clipRectBottom - circleRadius, circleRadius, paint)
 
         paint.color = Color.BLUE
+        // Align the RIGHT side of the text with the origin.
         paint.textSize = textSize
         paint.textAlign = Paint.Align.RIGHT
-        canvas.drawText(context.getString(R.string.clipping), clipRectRight, textOffset, paint)
-
+        canvas.drawText(context.getString(R.string.clipping), clipRectRight,textOffset,paint)
     }
 
     private fun drawBackAndUnclippedRectangle(canvas: Canvas)
     {
+        canvas.drawColor(Color.GRAY)
+        canvas.save()
+        canvas.translate(columnOne,rowOne)
+        drawClippedRectangle(canvas)
+        canvas.restore()
     }
     private fun drawDifferenceClippingExample(canvas: Canvas)
     {
     }
-    private fun drawCircularClippingExample(canvas: Canvas) {
+    private fun drawCircularClippingExample(canvas: Canvas)
+    {
     }
-    private fun drawIntersectionClippingExample(canvas: Canvas) {
+    private fun drawIntersectionClippingExample(canvas: Canvas)
+    {
     }
-    private fun drawCombinedClippingExample(canvas: Canvas) {
+    private fun drawCombinedClippingExample(canvas: Canvas)
+    {
     }
-    private fun drawRoundedRectangleClippingExample(canvas: Canvas) {
+    private fun drawRoundedRectangleClippingExample(canvas: Canvas)
+    {
     }
-    private fun drawOutsideClippingExample(canvas: Canvas) {
+    private fun drawOutsideClippingExample(canvas: Canvas)
+    {
     }
-    private fun drawTranslatedTextExample(canvas: Canvas) {
+    private fun drawTranslatedTextExample(canvas: Canvas)
+    {
     }
-    private fun drawSkewedTextExample(canvas: Canvas) {
+    private fun drawSkewedTextExample(canvas: Canvas)
+    {
     }
-    private fun drawQuickRejectExample(canvas: Canvas) {
+    private fun drawQuickRejectExample(canvas: Canvas)
+    {
     }
 
 }
