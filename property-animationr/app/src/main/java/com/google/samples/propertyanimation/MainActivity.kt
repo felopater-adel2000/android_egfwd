@@ -16,13 +16,18 @@
 
 package com.google.samples.propertyanimation
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.animation.ObjectAnimator
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity()
+{
 
     lateinit var star: ImageView
     lateinit var rotateButton: Button
@@ -69,7 +74,46 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun rotater() {
+    //Any Animation doing on any View created by ObjectAnimator
+    /**
+     * View Property:
+     *      1. rotation
+     *      2. translation
+     *      3. position
+     *      4. scale
+     *      5. alpha
+     *      6. translucency
+     *
+     *
+     * animation Event Listener:
+     *      1. starting
+     *      2. ending
+     *      3. pausing
+     *      4. resuming
+     *      5. repeating
+     * **/
+    private fun rotater()
+    {
+        //define animation of view
+        val animator = ObjectAnimator.ofFloat(star, View.ROTATION, -360f, 0f)
+
+        //duration on animation -> default = 300 milli
+        animator.duration = 1000
+
+        //handel animation listener
+        animator.addListener(object: AnimatorListenerAdapter(){
+            override fun onAnimationStart(animation: Animator?) {
+                rotateButton.isEnabled = false
+            }
+
+            override fun onAnimationEnd(animation: Animator?) {
+                rotateButton.isEnabled = true
+            }
+        })
+
+
+        //start animation
+        animator.start()
     }
 
     private fun translater() {
