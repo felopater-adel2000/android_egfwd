@@ -92,6 +92,19 @@ class MainActivity : AppCompatActivity()
      *      4. resuming
      *      5. repeating
      * **/
+    private fun ObjectAnimator.disableViewDuringAnimation(view: View)
+    {
+        addListener(object : AnimatorListenerAdapter() {
+            override fun onAnimationStart(animation: Animator?) {
+                view.isEnabled = false
+            }
+
+            override fun onAnimationEnd(animation: Animator?) {
+                view.isEnabled = true
+            }
+        })
+    }
+
     private fun rotater()
     {
         //define animation of view
@@ -101,22 +114,30 @@ class MainActivity : AppCompatActivity()
         animator.duration = 1000
 
         //handel animation listener
-        animator.addListener(object: AnimatorListenerAdapter(){
-            override fun onAnimationStart(animation: Animator?) {
-                rotateButton.isEnabled = false
-            }
-
-            override fun onAnimationEnd(animation: Animator?) {
-                rotateButton.isEnabled = true
-            }
-        })
-
+//        animator.addListener(object: AnimatorListenerAdapter(){
+//            override fun onAnimationStart(animation: Animator?) {
+//                rotateButton.isEnabled = false
+//            }
+//
+//            override fun onAnimationEnd(animation: Animator?) {
+//                rotateButton.isEnabled = true
+//            }
+//        })
+        animator.disableViewDuringAnimation(rotateButton)
 
         //start animation
         animator.start()
     }
 
-    private fun translater() {
+    private fun translater()
+    {
+        val animator = ObjectAnimator.ofFloat(star, View.TRANSLATION_X, 200f)
+
+        animator.repeatCount = 1
+        animator.repeatMode = ObjectAnimator.REVERSE
+        animator.disableViewDuringAnimation(translateButton)
+        animator.start()
+
     }
 
     private fun scaler() {
