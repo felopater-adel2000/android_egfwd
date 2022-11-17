@@ -13,6 +13,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.example.wander.databinding.ActivityMapsBinding
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.android.gms.maps.model.GroundOverlayOptions
 import com.google.android.gms.maps.model.MapStyleOptions
 import java.util.*
 
@@ -59,11 +60,15 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback
         val latitude = 29.315276
         val longitude =  30.852601
         val zoomLevel = 10f
+        val overlaySize = 100f
 
         val mesalaLocation = LatLng(latitude, longitude)
         map.addMarker(MarkerOptions().position(mesalaLocation).title("المسله"))
         //map.moveCamera(CameraUpdateFactory.newLatLng(mesalaLocation))
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(mesalaLocation, zoomLevel))
+
+        val androidOverlay = GroundOverlayOptions().image(BitmapDescriptorFactory.fromResource(R.drawable.android)).position(mesalaLocation, overlaySize)
+        map.addGroundOverlay(androidOverlay)
 
         setMapLongClicked(map)
         setPoiClick(map)
@@ -111,7 +116,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback
                     .title(getString(R.string.dropped_pin))
                     .snippet(snippet)
                 //change color of marker
-                //.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
             )
             //to show marker info
             ?.showInfoWindow()
