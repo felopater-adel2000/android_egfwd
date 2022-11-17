@@ -61,6 +61,7 @@ class HuntMainActivity : AppCompatActivity() {
     private lateinit var viewModel: GeofenceViewModel
 
     // TODO: Step 2 add in variable to check if device is running Q or later
+    private val runningQOrLater = android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q
 
     // A PendingIntent for the Broadcast Receiver that handles geofence transitions.
     // TODO: Step 8 add in a pending intent
@@ -114,12 +115,33 @@ class HuntMainActivity : AppCompatActivity() {
      * In all cases, we need to have the location permission.  On Android 10+ (Q) we need to have
      * the background permission as well.
      */
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>,
-        grantResults: IntArray
-    ) {
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray)
+    {
         // TODO: Step 5 add code to handle the result of the user's permission
+        Log.i("Felo", "onRequestPermissionsResult")
+
+        if(
+            grantResults.isEmpty() ||
+            grantResults[LOCATION_PERMISSION_INDEX] == PackageManager.PERMISSION_DENIED ||
+            (requestCode == REQUEST_FOREGROUND_AND_BACKGROUND_PERMISSION_RESULT_CODE &&
+                    grantResults[BACKGROUND_LOCATION_PERMISSION_INDEX] == PackageManager.PERMISSION_DENIED)
+        )
+        {
+            //try this instead of binding.activityMapsMain
+            Snackbar.make(binding.activityMapsMain, R.string.permission_denied_explanation, Snackbar.LENGTH_INDEFINITE)
+                .setAction(R.string.settings){
+                    startActivity(Intent().apply {
+                        action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+                        data = Uri.fromParts("package", BuildConfig.APPLICATION_ID, null)
+                        flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                    })
+                }
+                .show()
+        }
+        else
+        {
+            checkDeviceLocationSettingsAndStartGeofence()
+        }
     }
 
     /**
@@ -135,7 +157,8 @@ class HuntMainActivity : AppCompatActivity() {
      * Starts the permission check and Geofence process only if the Geofence associated with the
      * current hint isn't yet active.
      */
-    private fun checkPermissionsAndStartGeofencing() {
+    private fun checkPermissionsAndStartGeofencing()
+    {
         if (viewModel.geofenceIsActive()) return
         if (foregroundAndBackgroundLocationPermissionApproved()) {
             checkDeviceLocationSettingsAndStartGeofence()
@@ -157,18 +180,41 @@ class HuntMainActivity : AppCompatActivity() {
      *  Android versions.
      */
     @TargetApi(29)
-    private fun foregroundAndBackgroundLocationPermissionApproved(): Boolean {
+    private fun foregroundAndBackgroundLocationPermissionApproved(): Boolean
+    {
         // TODO: Step 3 replace this with code to check that the foreground and background
         //  permissions were approved
-        return false
+        val foregroundLocationApproved = (PackageManager.PERMISSION_GRANTED == ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION))
+
+        val backgroundPermissionApproved =
+            if(runningQOrLater) PackageManager.PERMISSION_GRANTED == ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION)
+            else true
+        return backgroundPermissionApproved && foregroundLocationApproved
     }
 
     /*
      *  Requests ACCESS_FINE_LOCATION and (on Android 10+ (Q) ACCESS_BACKGROUND_LOCATION.
      */
     @TargetApi(29 )
-    private fun requestForegroundAndBackgroundLocationPermissions() {
+    private fun requestForegroundAndBackgroundLocationPermissions()
+    {
         // TODO: Step 4 add code to request foreground and background permissions
+        if (foregroundAndBackgroundLocationPermissionApproved())
+            return
+        var permissionsArray = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
+        val resultCode = when {
+            runningQOrLater -> {
+                permissionsArray += Manifest.permission.ACCESS_BACKGROUND_LOCATION
+                REQUEST_FOREGROUND_AND_BACKGROUND_PERMISSION_RESULT_CODE
+            }
+            else -> REQUEST_FOREGROUND_ONLY_PERMISSIONS_REQUEST_CODE
+        }
+        Log.d("Felo", "Request foreground only location permission")
+        ActivityCompat.requestPermissions(
+            this@HuntMainActivity,
+            permissionsArray,
+            resultCode
+        )
     }
 
     /*
@@ -177,7 +223,8 @@ class HuntMainActivity : AppCompatActivity() {
      * no more geofences, we remove the geofence and let the viewmodel know that the ending hint
      * is now "active."
      */
-    private fun addGeofenceForClue() {
+    private fun addGeofenceForClue()
+    {
         // TODO: Step 10 add in code to add the geofence
     }
 
@@ -185,7 +232,8 @@ class HuntMainActivity : AppCompatActivity() {
      * Removes geofences. This method should be called after the user has granted the location
      * permission.
      */
-    private fun removeGeofences() {
+    private fun removeGeofences()
+    {
         // TODO: Step 12 add in code to remove the geofences
     }
     companion object {
