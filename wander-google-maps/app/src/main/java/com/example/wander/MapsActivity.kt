@@ -62,6 +62,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(mesalaLocation, zoomLevel))
 
         setMapLongClicked(map)
+        setPoiClick(map)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean
@@ -110,6 +111,15 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback
             //to show marker info
             ?.showInfoWindow()
 
+        }
+    }
+
+    private fun setPoiClick(map: GoogleMap)
+    {
+        map.setOnPoiClickListener {
+            val poiMarker = map.addMarker(MarkerOptions().position(it.latLng).title(it.name))
+
+            poiMarker?.showInfoWindow()
         }
     }
 }
