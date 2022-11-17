@@ -89,10 +89,16 @@ class HuntMainActivity : AppCompatActivity() {
  *  checkDeviceLocationSettingsAndStartGeofence again to make sure it's actually on, but
  *  we don't resolve the check to keep the user from seeing an endless loop.
  */
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?)
+    {
+        Log.i("Felo", "OnActivityResult called")
         super.onActivityResult(requestCode, resultCode, data)
         // TODO: Step 7 add code to check that the user turned on their device location and ask
         //  again if they did not
+        if(requestCode == REQUEST_TURN_DEVICE_LOCATION_ON)
+        {
+            checkDeviceLocationSettingsAndStartGeofence(false)
+        }
     }
 
     /*
@@ -135,8 +141,7 @@ class HuntMainActivity : AppCompatActivity() {
                         data = Uri.fromParts("package", BuildConfig.APPLICATION_ID, null)
                         flags = Intent.FLAG_ACTIVITY_NEW_TASK
                     })
-                }
-                .show()
+                }.show()
         }
         else
         {
@@ -171,8 +176,44 @@ class HuntMainActivity : AppCompatActivity() {
      *  Uses the Location Client to check the current state of location settings, and gives the user
      *  the opportunity to turn on location services within our app.
      */
-    private fun checkDeviceLocationSettingsAndStartGeofence(resolve:Boolean = true) {
+    private fun checkDeviceLocationSettingsAndStartGeofence(resolve:Boolean = true)
+    {
         // TODO: Step 6 add code to check that the device's location is on
+        val locationRequest = LocationRequest.create().apply {
+            priority = LocationRequest.PRIORITY_LOW_POWER
+        }
+        val builder = LocationSettingsRequest.Builder().addLocationRequest(locationRequest)
+
+        val settingClient = LocationServices.getSettingsClient(this)
+        val locationSettingsResponseTask = settingClient.checkLocationSettings(builder.build())
+
+        locationSettingsResponseTask.addOnFailureListener { exception ->
+            Log.i("Felo", "case failurre ")
+            if (exception is ResolvableApiException && resolve)
+            {
+                try {
+                    exception.startResolutionForResult(this@HuntMainActivity,
+                        REQUEST_TURN_DEVICE_LOCATION_ON)
+                } catch (sendEx: IntentSender.SendIntentException) {
+                    Log.d(TAG, "Error getting location settings resolution: " + sendEx.message)
+                }
+            }
+            else {
+                Log.i("Felo", "Will show Snackbar")
+                Snackbar.make(
+                    binding.activityMapsMain,
+                    R.string.location_required_error, Snackbar.LENGTH_INDEFINITE
+                ).setAction(android.R.string.ok) {
+                    checkDeviceLocationSettingsAndStartGeofence()
+                }.show()
+            }
+        }
+        locationSettingsResponseTask.addOnCompleteListener {
+            if(it.isSuccessful)
+            {
+                addGeofenceForClue()
+            }
+        }
     }
 
     /*
