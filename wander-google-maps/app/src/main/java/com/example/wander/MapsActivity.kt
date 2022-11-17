@@ -2,6 +2,7 @@ package com.example.wander
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -12,6 +13,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.example.wander.databinding.ActivityMapsBinding
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.android.gms.maps.model.MapStyleOptions
 import java.util.*
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback
@@ -19,6 +21,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback
 
     private lateinit var map: GoogleMap
     private lateinit var binding: ActivityMapsBinding
+
+    private val TAG = MapsActivity::class.java.simpleName
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
@@ -54,7 +58,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback
         //Messala Location: 29.315276, 30.852601
         val latitude = 29.315276
         val longitude =  30.852601
-        val zoomLevel = 20f
+        val zoomLevel = 10f
 
         val mesalaLocation = LatLng(latitude, longitude)
         map.addMarker(MarkerOptions().position(mesalaLocation).title("المسله"))
@@ -63,6 +67,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback
 
         setMapLongClicked(map)
         setPoiClick(map)
+        setMapStyle(map)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean
@@ -120,6 +125,25 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback
             val poiMarker = map.addMarker(MarkerOptions().position(it.latLng).title(it.name))
 
             poiMarker?.showInfoWindow()
+        }
+    }
+
+    private fun setMapStyle(map: GoogleMap)
+    {
+        try {
+            // Customize the styling of the base map using a JSON object defined
+            // in a raw resource file.
+            val success = map.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style))
+
+            if(!success)
+            {
+                Log.i("Felo", "Style parsing failed")
+            }
+
+        }catch(e: Exception)
+        {
+            Log.i("Felo", "Exception")
+            Log.i("Felo", "Can't find style. Error: ${e.toString()}")
         }
     }
 }
