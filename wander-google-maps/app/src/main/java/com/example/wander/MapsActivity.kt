@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -12,6 +11,8 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.example.wander.databinding.ActivityMapsBinding
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import java.util.*
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback
 {
@@ -59,6 +60,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback
         map.addMarker(MarkerOptions().position(mesalaLocation).title("المسله"))
         //map.moveCamera(CameraUpdateFactory.newLatLng(mesalaLocation))
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(mesalaLocation, zoomLevel))
+
+        setMapLongClicked(map)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean
@@ -84,5 +87,29 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback
             R.id.terrain_map -> map.mapType = GoogleMap.MAP_TYPE_TERRAIN
         }
         return true
+    }
+
+    private fun setMapLongClicked(map: GoogleMap)
+    {
+        map.setOnMapLongClickListener { latLng ->
+            // A Snippet is Additional text that's displayed below the title.
+            val snippet = String.format(
+                Locale.getDefault(),
+                "Lat: %1$.5f, Long: %2$.5f",
+                latLng.latitude,
+                latLng.longitude
+            )
+            map.addMarker(
+                MarkerOptions()
+                    .position(latLng)
+                    .title(getString(R.string.dropped_pin))
+                    .snippet(snippet)
+                //change color of marker
+                //.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
+            )
+            //to show marker info
+            ?.showInfoWindow()
+
+        }
     }
 }
