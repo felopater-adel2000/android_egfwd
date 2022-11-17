@@ -46,9 +46,19 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback
         map = googleMap
 
         // Add a marker in Sydney and move the camera
-        val sydney = LatLng(-34.0, 151.0)
-        map.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
-        map.moveCamera(CameraUpdateFactory.newLatLng(sydney))
+//        val sydney = LatLng(-34.0, 151.0)
+//        map.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
+//        map.moveCamera(CameraUpdateFactory.newLatLng(sydney))
+
+        //Messala Location: 29.315276, 30.852601
+        val latitude = 29.315276
+        val longitude =  30.852601
+        val zoomLevel = 20f
+
+        val mesalaLocation = LatLng(latitude, longitude)
+        map.addMarker(MarkerOptions().position(mesalaLocation).title("المسله"))
+        //map.moveCamera(CameraUpdateFactory.newLatLng(mesalaLocation))
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(mesalaLocation, zoomLevel))
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean
