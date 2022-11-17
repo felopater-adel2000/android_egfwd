@@ -2,6 +2,8 @@ package com.example.wander
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -14,10 +16,11 @@ import com.example.wander.databinding.ActivityMapsBinding
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback
 {
 
-    private lateinit var mMap: GoogleMap
+    private lateinit var map: GoogleMap
     private lateinit var binding: ActivityMapsBinding
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?)
+    {
         super.onCreate(savedInstanceState)
 
         binding = ActivityMapsBinding.inflate(layoutInflater)
@@ -38,12 +41,38 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback
      * it inside the SupportMapFragment. This method will only be triggered once the user has
      * installed Google Play services and returned to the app.
      */
-    override fun onMapReady(googleMap: GoogleMap) {
-        mMap = googleMap
+    override fun onMapReady(googleMap: GoogleMap)
+    {
+        map = googleMap
 
         // Add a marker in Sydney and move the camera
         val sydney = LatLng(-34.0, 151.0)
-        mMap.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
+        map.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
+        map.moveCamera(CameraUpdateFactory.newLatLng(sydney))
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean
+    {
+        menuInflater.inflate(R.menu.map_options, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean
+    {
+        when(item.itemId)
+        {
+            //change type of map to normal type
+            R.id.normal_map -> map.mapType = GoogleMap.MAP_TYPE_NORMAL
+
+            //change type of map to Satellite type
+            R.id.satellite_map -> map.mapType = GoogleMap.MAP_TYPE_SATELLITE
+
+            //change type of map to Hybrid type(normal + satellite)
+            R.id.hybrid_map -> map.mapType = GoogleMap.MAP_TYPE_HYBRID
+
+            //change type of map to Terrain type
+            R.id.terrain_map -> map.mapType = GoogleMap.MAP_TYPE_TERRAIN
+        }
+        return true
     }
 }
