@@ -65,6 +65,12 @@ class HuntMainActivity : AppCompatActivity() {
 
     // A PendingIntent for the Broadcast Receiver that handles geofence transitions.
     // TODO: Step 8 add in a pending intent
+    private val geofencePendingIntent: PendingIntent by lazy {
+        val intent = Intent(this, GeofenceBroadcastReceiver::class.java)
+        intent.action = ACTION_GEOFENCE_EVENT
+
+        PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,6 +80,9 @@ class HuntMainActivity : AppCompatActivity() {
         binding.viewmodel = viewModel
         binding.lifecycleOwner = this
         // TODO: Step 9 instantiate the geofencing client
+        //this line does not need permission
+        //GeofencingClient interact with Geofencing API
+        geofencingClient = LocationServices.getGeofencingClient(this)
 
         // Create channel for notifications
         createChannel(this )
@@ -267,6 +276,49 @@ class HuntMainActivity : AppCompatActivity() {
     private fun addGeofenceForClue()
     {
         // TODO: Step 10 add in code to add the geofence
+        if(viewModel.geofenceIsActive()) return
+
+        val currentGeofenceIndex = viewModel.nextGeofenceIndex()
+        if(currentGeofenceIndex >= GeofencingConstants.NUM_LANDMARKS)
+        {
+            removeGeofences()
+            viewModel.geofenceActivated()
+            return
+        }
+
+        val currentGeofenceData = GeofencingConstants.LANDMARK_DATA[currentGeofenceIndex]
+
+        //you need to create 2 things: 1.Geofence   2.GeofenceRequest
+        val geofence = Geofence.Builder()
+            .setRequestId(currentGeofenceData.id)
+            .setCircularRegion(currentGeofenceData.latLong.latitude, currentGeofenceData.latLong.longitude, GeofencingConstants.GEOFENCE_RADIUS_IN_METERS)
+            .setExpirationDuration(GeofencingConstants.GEOFENCE_EXPIRATION_IN_MILLISECONDS)
+            .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER).build()
+
+        val geofenceRequest = GeofencingRequest.Builder()
+            .setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER)
+            .addGeofence(geofence).build()
+
+        //remove anu geofence already associated to the PendingIntent
+        geofencingClient.removeGeofences(geofencePendingIntent)?.run {
+            addOnCompleteListener {
+                geofencingClient.addGeofences(geofenceRequest, geofencePendingIntent)?.run {
+                    addOnSuccessListener {
+                        Toast.makeText(this@HuntMainActivity, R.string.geofences_added, Toast.LENGTH_LONG).show()
+                        Log.i("Felo", "Add Geofencing -> id: ${geofence.requestId}")
+                        viewModel.geofenceActivated()
+                    }
+                    addOnFailureListener {
+                        Toast.makeText(this@HuntMainActivity, R.string.geofences_not_added, Toast.LENGTH_LONG).show()
+                        if (it.message != null)
+                        {
+                            Log.i("Felo", "cause Exception on addGeofences -> message: ${it.message}")
+                        }
+                    }
+                }
+            }
+        }
+
     }
 
     /**
@@ -277,6 +329,7 @@ class HuntMainActivity : AppCompatActivity() {
     {
         // TODO: Step 12 add in code to remove the geofences
     }
+
     companion object {
         internal const val ACTION_GEOFENCE_EVENT =
             "HuntMainActivity.treasureHunt.action.ACTION_GEOFENCE_EVENT"
