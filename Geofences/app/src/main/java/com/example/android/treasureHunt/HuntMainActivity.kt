@@ -328,6 +328,19 @@ class HuntMainActivity : AppCompatActivity() {
     private fun removeGeofences()
     {
         // TODO: Step 12 add in code to remove the geofences
+        if(!foregroundAndBackgroundLocationPermissionApproved())
+        {
+            return
+        }
+        geofencingClient.removeGeofences(geofencePendingIntent)?.run {
+            addOnSuccessListener {
+                Log.i("Felo", getString(R.string.geofences_removed))
+                Toast.makeText(this@HuntMainActivity, R.string.geofences_removed, Toast.LENGTH_LONG).show()
+            }
+            addOnFailureListener {
+                Log.i("Felo", getString(R.string.geofences_not_removed))
+            }
+        }
     }
 
     companion object {
