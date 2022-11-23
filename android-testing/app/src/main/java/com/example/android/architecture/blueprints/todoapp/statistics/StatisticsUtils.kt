@@ -21,11 +21,13 @@ import com.example.android.architecture.blueprints.todoapp.data.Task
 /**
  * Function that does some trivial computation. Used to showcase unit tests.
  */
-internal fun getActiveAndCompletedStats(tasks: List<Task>?): StatsResult {
-
-    return if (tasks == null || tasks.isEmpty()) {
+internal fun getActiveAndCompletedStats(tasks: List<Task>?): StatsResult
+{
+    return if (tasks == null || tasks.isEmpty())
+    {
         StatsResult(0f, 0f)
-    } else {
+    } else
+    {
         val totalTasks = tasks.size
         val numberOfActiveTasks = tasks.count { it.isActive }
         StatsResult(
