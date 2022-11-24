@@ -102,7 +102,8 @@ class TasksViewModel(application: Application) : AndroidViewModel(application) {
      * [TasksFilterType.COMPLETED_TASKS], or
      * [TasksFilterType.ACTIVE_TASKS]
      */
-    fun setFiltering(requestType: TasksFilterType) {
+    fun setFiltering(requestType: TasksFilterType)
+    {
         currentFiltering = requestType
 
         // Depending on the filter type, set the filtering label, icon drawables, etc.
