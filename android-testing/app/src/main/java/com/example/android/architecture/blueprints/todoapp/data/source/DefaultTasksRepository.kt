@@ -39,21 +39,22 @@ class DefaultTasksRepository constructor(
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : TasksRepository {
 
-    companion object {
-        @Volatile
-        private var INSTANCE: DefaultTasksRepository? = null
-
-        fun getRepository(app: Application): DefaultTasksRepository
-        {
-            return INSTANCE ?: synchronized(this)
-            {
-                val database = Room.databaseBuilder(app, ToDoDatabase::class.java, "Tasks.db").build()
-                DefaultTasksRepository(TasksRemoteDataSource, TasksLocalDataSource(database.taskDao())).also {
-                    INSTANCE = it
-                }
-            }
-        }
-    }
+    /** use ServiceLocator */
+//    companion object {
+//        @Volatile
+//        private var INSTANCE: DefaultTasksRepository? = null
+//
+//        fun getRepository(app: Application): DefaultTasksRepository
+//        {
+//            return INSTANCE ?: synchronized(this)
+//            {
+//                val database = Room.databaseBuilder(app, ToDoDatabase::class.java, "Tasks.db").build()
+//                DefaultTasksRepository(TasksRemoteDataSource, TasksLocalDataSource(database.taskDao())).also {
+//                    INSTANCE = it
+//                }
+//            }
+//        }
+//    }
 
     /** we get remote and local Data source from constructor so we do not need init */
 //    init {
