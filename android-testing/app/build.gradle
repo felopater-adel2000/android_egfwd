@@ -70,8 +70,11 @@ dependencies {
     androidTestImplementation "androidx.test.ext:junit:$androidXTestExtKotlinRunnerVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion"
 
-//    // Add the following for InstantTaskExecutorRule class. https://stackoverflow.com/a/56073388
+    // Add the following for InstantTaskExecutorRule class. https://stackoverflow.com/a/56073388
     testImplementation 'androidx.arch.core:core-testing:2.1.0'
+
+    //Coroutines for test
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion"
 
     // Add the followings for using AndroidJUnit4.
     testImplementation "androidx.test:core-ktx:$androidXTestCoreVersion"
