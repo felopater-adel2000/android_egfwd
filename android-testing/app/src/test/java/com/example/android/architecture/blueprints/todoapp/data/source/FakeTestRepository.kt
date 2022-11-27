@@ -4,8 +4,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.android.architecture.blueprints.todoapp.data.Result
 import com.example.android.architecture.blueprints.todoapp.data.Task
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 
+@ExperimentalCoroutinesApi
 class FakeTestRepository : TasksRepository
 {
     var tasksServiceData: LinkedHashMap<String, Task> = LinkedHashMap()
@@ -45,7 +47,8 @@ class FakeTestRepository : TasksRepository
     }
 
     override suspend fun completeTask(task: Task) {
-        TODO("Not yet implemented")
+        val completedTask = Task(task.title, task.description, true, task.id)
+        tasksServiceData[task.id] = completedTask
     }
 
     override suspend fun completeTask(taskId: String) {
@@ -72,7 +75,7 @@ class FakeTestRepository : TasksRepository
         TODO("Not yet implemented")
     }
 
-    fun addTask(vararg tasks: Task)
+    fun addTasks(vararg tasks: Task)
     {
         for(task in tasks)
         {

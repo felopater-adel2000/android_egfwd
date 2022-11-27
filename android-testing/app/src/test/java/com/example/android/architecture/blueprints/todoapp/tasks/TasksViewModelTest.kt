@@ -1,24 +1,30 @@
 package com.example.android.architecture.blueprints.todoapp.tasks
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.test.core.app.ApplicationProvider
-import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.android.architecture.blueprints.todoapp.*
 import com.example.android.architecture.blueprints.todoapp.data.Task
-import com.example.android.architecture.blueprints.todoapp.data.source.DefaultTasksRepository
 import com.example.android.architecture.blueprints.todoapp.data.source.FakeTestRepository
 import com.example.android.architecture.blueprints.todoapp.getOrAwaitValue
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.setMain
 import org.hamcrest.CoreMatchers.*
 import org.hamcrest.MatcherAssert.assertThat
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
 
 //when run with AndroidJUnit4 it use Androidx to to choose test method local test or Instrumented
 //@RunWith(AndroidJUnit4::class)
+@ExperimentalCoroutinesApi
 class TasksViewModelTest
 {
+    // coroutine scope for testing
+    val testDispatcher: TestCoroutineDispatcher = TestCoroutineDispatcher()
+
     private lateinit var tasksRepository: FakeTestRepository
     //this line run all background tasks for android before run test
     @get:Rule
@@ -33,8 +39,23 @@ class TasksViewModelTest
         val task1 = Task("Title1", "Description1")
         val task2 = Task("Title2", "Description2", true)
         val task3 = Task("Title3", "Description3", true)
-        tasksRepository.addTask(task1, task2, task3)
+        tasksRepository.addTasks(task1, task2, task3)
         tasksViewModel = TasksViewModel(tasksRepository)
+    }
+
+    @Before
+    fun setDispatcher()
+    {
+        //set main Dispatchers to testDispatcher instead of Android's Main looper
+        Dispatchers.setMain(testDispatcher)
+    }
+
+    @After
+    fun tearDownDispatcher()
+    {
+        //After finish testing reset and clean all things
+        Dispatchers.resetMain()
+        testDispatcher.cleanupTestCoroutines()
     }
 
     @Test
@@ -83,5 +104,23 @@ class TasksViewModelTest
         // Then the "Add task" action is visible
         assertThat(tasksViewModel.tasksAddViewVisible.getOrAwaitValue(), `is`(true))
 
+    }
+
+    @Test
+    fun completeTask_dataAndSnackbarUpdated()
+    {
+        // Create an active task and add it to the repository.
+        val task = Task("Title", "Description")
+        tasksRepository.addTasks(task)
+
+        // Mark the task as complete task.
+        tasksViewModel.completeTask(task, true)
+
+        // Verify the task is completed.
+        assertThat(tasksRepository.tasksServiceData[task.id]?.isCompleted, `is`(true))
+
+        // Assert that the snackbar has been updated with the correct text.
+        val snackbarText: Event<Int> =  tasksViewModel.snackbarText.getOrAwaitValue()
+        assertThat(snackbarText.getContentIfNotHandled(), `is`(R.string.task_marked_complete))
     }
 }
