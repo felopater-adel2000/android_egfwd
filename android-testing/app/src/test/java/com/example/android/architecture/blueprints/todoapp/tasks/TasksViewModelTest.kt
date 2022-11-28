@@ -22,8 +22,8 @@ import org.junit.Test
 @ExperimentalCoroutinesApi
 class TasksViewModelTest
 {
-    // coroutine scope for testing
-    val testDispatcher: TestCoroutineDispatcher = TestCoroutineDispatcher()
+    @get:Rule
+    val mainCoroutineRult = MainCoroutineRule()
 
     private lateinit var tasksRepository: FakeTestRepository
     //this line run all background tasks for android before run test
@@ -43,20 +43,22 @@ class TasksViewModelTest
         tasksViewModel = TasksViewModel(tasksRepository)
     }
 
-    @Before
-    fun setDispatcher()
-    {
-        //set main Dispatchers to testDispatcher instead of Android's Main looper
-        Dispatchers.setMain(testDispatcher)
-    }
-
-    @After
-    fun tearDownDispatcher()
-    {
-        //After finish testing reset and clean all things
-        Dispatchers.resetMain()
-        testDispatcher.cleanupTestCoroutines()
-    }
+    /**We do not need After and Before because we use MainCoroutineRule*/
+    //    // coroutine scope for testing
+//    val testDispatcher: TestCoroutineDispatcher = TestCoroutineDispatcher()
+//    @Before
+//    fun setDispatcher()
+//    {
+//        //set main Dispatchers to testDispatcher instead of Android's Main looper
+//        Dispatchers.setMain(testDispatcher)
+//    }
+//    @After
+//    fun tearDownDispatcher()
+//    {
+//        //After finish testing reset and clean all things
+//        Dispatchers.resetMain()
+//        testDispatcher.cleanupTestCoroutines()
+//    }
 
     @Test
     fun addNewTask_setNewTaskEvent()
