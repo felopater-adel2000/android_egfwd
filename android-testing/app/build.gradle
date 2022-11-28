@@ -49,6 +49,12 @@ android {
 
         }
     }
+
+    //for idling
+    testOptions.unitTests {
+        includeAndroidResources = true
+        returnDefaultValues = true
+    }
 }
 
 dependencies {
@@ -113,4 +119,7 @@ dependencies {
     androidTestImplementation "org.mockito:mockito-core:$mockitoVersion"
     androidTestImplementation "com.linkedin.dexmaker:dexmaker-mockito:$dexMakerVersion"
     androidTestImplementation "androidx.test.espresso:espresso-contrib:$espressoVersion"
+
+    //for idling section
+    implementation "androidx.test.espresso:espresso-idling-resource:$espressoVersion"
 }
