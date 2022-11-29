@@ -21,11 +21,10 @@ import android.os.Bundle
 
 class MainActivity : AppCompatActivity() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?)
+    {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-
     //TODO:for all in local.properities add sdk.dir=G\:\\AllSDKs\\sdk_win (replace my sdk path by yours)
     //
     //
