@@ -21,6 +21,7 @@ import android.util.Log
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceFragmentCompat
 
@@ -33,11 +34,27 @@ class SettingsFragment : PreferenceFragmentCompat() {
     // Get a reference to the ViewModel scoped to this Fragment
     private val viewModel by viewModels<LoginViewModel>()
 
-    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?)
+    {
         setPreferencesFromResource(R.xml.settings, rootKey)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?)
+    {
         super.onViewCreated(view, savedInstanceState)
+        viewModel.authenticationState.observe(viewLifecycleOwner, Observer{ authenticationState ->
+            when(authenticationState)
+            {
+                LoginViewModel.AuthenticationState.AUTHENTICATED -> {
+                    Log.i(TAG, "Authenticated")
+                }
+                LoginViewModel.AuthenticationState.UNAUTHENTICATED -> {
+                    findNavController().navigate(R.id.loginFragment)
+                }
+                else -> {
+                    Log.e("Felo", "New $authenticationState state that doesn't require any UI change")
+                }
+            }
+        })
     }
 }

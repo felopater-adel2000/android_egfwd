@@ -63,6 +63,11 @@ class MainFragment : Fragment() {
         observeAuthenticationState()
 
         binding.authButton.setOnClickListener { launchSignInFlow() }
+        binding.settingsBtn.setOnClickListener {
+            //val action = MainFragmentDirections.actionMainFragmentToSettingsFragment()
+            //findNavController().navigate(action)
+            findNavController().navigate(R.id.action_mainFragment_to_settingsFragment)
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?)
