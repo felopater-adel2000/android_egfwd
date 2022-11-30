@@ -45,9 +45,10 @@ class LoginViewModel : ViewModel() {
     }
 
     val authenticationState = FirebaseUserLiveData().map { user ->
-        if (user != null) {
+        if(user != null)
+        {
             AuthenticationState.AUTHENTICATED
-        } else {
+        }else{
             AuthenticationState.UNAUTHENTICATED
         }
     }

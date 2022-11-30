@@ -32,13 +32,9 @@ import androidx.lifecycle.LiveData
 class FirebaseUserLiveData : LiveData<FirebaseUser?>() {
     private val firebaseAuth = FirebaseAuth.getInstance()
 
-    // TODO set the value of this FireUserLiveData object by hooking it up to equal the value of the
-    //  current FirebaseUser. You can utilize the FirebaseAuth.AuthStateListener callback to get
-    //  updates on the current Firebase user logged into the app.
     private val authStateListener = FirebaseAuth.AuthStateListener { firebaseAuth ->
-        // Use the FirebaseAuth instance instantiated at the beginning of the class to get an entry
-        // point into the Firebase Authentication SDK the app is using.
-        // With an instance of the FirebaseAuth class, you can now query for the current user.
+        //value will change when the user logged in or out
+        //value is FirebaseUser object
         value = firebaseAuth.currentUser
     }
 

@@ -27,6 +27,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import com.example.android.firebaseui_login_sample.databinding.FragmentMainBinding
 import com.firebase.ui.auth.AuthUI
@@ -56,7 +57,8 @@ class MainFragment : Fragment() {
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?)
+    {
         super.onViewCreated(view, savedInstanceState)
         observeAuthenticationState()
 
@@ -86,23 +88,21 @@ class MainFragment : Fragment() {
     private fun observeAuthenticationState() {
         val factToDisplay = viewModel.getFactToDisplay(requireContext())
 
-        viewModel.authenticationState.observe(viewLifecycleOwner, Observer { authenticationState ->
-            when (authenticationState) {
+        viewModel.authenticationState.observe(viewLifecycleOwner, Observer{ authenticationState ->
+            when(authenticationState)
+            {
                 LoginViewModel.AuthenticationState.AUTHENTICATED -> {
-                    binding.welcomeText.text = getFactWithPersonalization(factToDisplay)
-
+                    //Update button data
                     binding.authButton.text = getString(R.string.logout_button_text)
-                    binding.authButton.setOnClickListener {
-                        AuthUI.getInstance().signOut(requireContext())
-                    }
+                    binding.authButton.setOnClickListener { AuthUI.getInstance().signOut(requireContext()) }
+
+                    //update text Welcome Data
+                    binding.welcomeText.text = getFactWithPersonalization(factToDisplay)
                 }
                 else -> {
-                    binding.welcomeText.text = factToDisplay
-
                     binding.authButton.text = getString(R.string.login_button_text)
-                    binding.authButton.setOnClickListener {
-                        launchSignInFlow()
-                    }
+                    binding.authButton.setOnClickListener { launchSignInFlow() }
+                    binding.welcomeText.text = factToDisplay
                 }
             }
         })
