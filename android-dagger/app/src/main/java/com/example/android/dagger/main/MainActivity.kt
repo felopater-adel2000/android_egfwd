@@ -42,7 +42,8 @@ class MainActivity : AppCompatActivity() {
         val userManager = (application as MyApplication).userManager
         if (!userManager.isUserLoggedIn())
         {
-            if (!userManager.isUserRegistered()) {
+            if (!userManager.isUserRegistered())
+            {
                 startActivity(Intent(this, RegistrationActivity::class.java))
                 finish()
             } else {
