@@ -16,6 +16,8 @@
 
 package com.example.android.hilt
 
+import android.app.Application
+import android.content.Context
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
@@ -25,19 +27,28 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
+import androidx.test.runner.AndroidJUnitRunner
 import com.example.android.hilt.ui.MainActivity
+import dagger.hilt.android.testing.HiltAndroidRule
+import dagger.hilt.android.testing.HiltAndroidTest
+import dagger.hilt.android.testing.HiltTestApplication
 import org.hamcrest.Matchers.containsString
 import org.junit.After
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-class AppTest {
+@HiltAndroidTest
+class AppTest
+{
+    @get:Rule
+    var hiltRule = HiltAndroidRule(this)
 
     @After
     fun tearDown() {
         // Remove logs after the test finishes
-        ServiceLocator(getInstrumentation().targetContext).loggerLocalDataSource.removeLogs()
+        //ServiceLocator(getInstrumentation().targetContext).loggerLocalDataSource.removeLogs()
     }
 
     @Test
@@ -56,5 +67,12 @@ class AppTest {
         // Check Logs fragment screen is displayed
         onView(withText(containsString("Interaction with 'Button 1'")))
             .check(matches(isDisplayed()))
+    }
+}
+
+class CustomTestRunner : AndroidJUnitRunner() {
+
+    override fun newApplication(cl: ClassLoader?, name: String?, context: Context?): Application {
+        return super.newApplication(cl, HiltTestApplication::class.java.name, context)
     }
 }

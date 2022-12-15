@@ -33,7 +33,7 @@ class ServiceLocator(applicationContext: Context) {
         "logging.db"
     ).build()
 
-    val loggerLocalDataSource = LoggerLocalDataSource(logsDatabase.logDao())
+    val loggerLocalDataSource = LoggerLocalDataSource(logsDatabase)
 
     fun provideDateFormatter() = DateFormatter()
 
